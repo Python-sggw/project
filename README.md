@@ -1,2 +1,2 @@
 # project
-Project ma zaliczenie
+Project na zaliczenie
