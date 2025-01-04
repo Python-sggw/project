@@ -35,11 +35,11 @@
 </head>
 <body>
     <img src="https://via.placeholder.com/100" alt="Profile Picture" class="profile-picture">
-
     <div class="posts-container container">
         <div class="text-center my-4 new-post-button">
-            <button class="btn btn-primary">Nowy Post</button>
+            <a href="{{ url_for('new_post') }}" class="btn btn-primary">Nowy Post</a>
         </div>
+        
         <div class="row">
             {% for post in posts %}
             <div class="col-12 mb-4">
