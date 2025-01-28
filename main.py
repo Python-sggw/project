@@ -103,11 +103,25 @@ def add():
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
+@app.route('/like', methods=['POST'])
+@login_required
+def like_photo():
+    data = request.json
+    photo_id = data.get('id')
+    if photo_id:
+        photo = Photos.query.filter_by(id=photo_id).first()  
+        if photo:
+            photo.likes += 1 
+            db.session.commit()  
+            return {"success": True, "likes": photo.likes}, 200 
+        else:
+            return {"success": False, "message": "Photo not found"}, 404 
+    return {"success": False, "message": "No photo ID provided"}, 400  
+
 @app.route('/new_post', methods=['GET', 'POST'])
 @login_required
 def new_post():
     if request.method == 'POST':
-        # Sprawdź, czy w żądaniu POST znajduje się plik
         if 'file' not in request.files:
             flash('No file part')
             return redirect(request.url)
@@ -116,14 +130,12 @@ def new_post():
             flash('No selected file')
             return redirect(request.url)
         if file and allowed_file(file.filename):
-            #filename = secure_filename(file.filename)
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], file.filename))
             
-            # Dodaj zdjęcie do bazy danych
             new_photo = Photos(
                 name=file.filename,
-                likes=4,
-                comments="test",
+                likes=0,
+                comments="",
                 user_id = current_user.get_id()
             )
             db.session.add(new_photo)
@@ -133,6 +145,8 @@ def new_post():
             return redirect(url_for('main_page'))
     return render_template('new_post.html')
 
+
+
 @app.route('/')
 @login_required
 def main_page():
@@ -141,6 +155,7 @@ def main_page():
     photos = photos[:5]
     posts = [
         {
+            "id": photo.id,
             "username": f"{photo.user_id}",
             "image": f"./photos/{photo.name}",
             "likes": photo.likes,
@@ -155,7 +170,7 @@ def main_page():
 
 
 if __name__ == '__main__':
-    # with app.app_context():
-    #     db.create_all()
-    #     add()
+    with app.app_context():
+        db.create_all()
+        add()
     app.run()
