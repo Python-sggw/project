@@ -33,22 +33,21 @@ python3 main.py
 
 ## Jak uruchomić (Windows)?
 
-### Tworzymy venv venv czyli </br>
+### Tworzymy venv venv czyli 
 ```bash
 py -m venv venv
 ```
-</br>
-### Teraz go uruchamiamy </br>
+### Teraz go uruchamiamy 
 ```bash
 venv\Scripts\activate.bat
 ```
-</br>
-### Pobieramy niezbędne pakiety </br>
+
+### Pobieramy niezbędne pakiety 
 ```bash
 pip install -r requirement.txt
 ```
-</br>
-### Uruchamiamy </br>
+
+### Uruchamiamy 
 ```bash
 py main.py
 ```
