@@ -56,11 +56,15 @@
                             View Comments
                         </button>
                         <div class="collapse mt-3" id="comments-{{ loop.index }}">
-                            <ul class="list-group">
+                            <ul class="list-group comment-list">
                                 {% for comment in post.comments %}
                                 <li class="list-group-item">{{ comment }}</li>
                                 {% endfor %}
                             </ul>
+                            <div class="mt-2">
+                                <input type="text" class="form-control comment-input" placeholder="Dodaj komentarz..." data-id="{{ post.id }}">
+                                <button class="btn btn-primary mt-1 add-comment-button" data-id="{{ post.id }}">Dodaj</button>
+                            </div>
                         </div>
                     </div>   
                 </div>
@@ -98,7 +102,43 @@
                     });
                 });
             });
-        });        
+        });
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelectorAll('.add-comment-button').forEach(button => {
+                button.addEventListener('click', function () {
+                    const photoId = this.dataset.id;
+                    const inputField = document.querySelector(`.comment-input[data-id="${photoId}"]`);
+                    const commentText = inputField.value.trim();
+                    const commentList = this.closest('.collapse').querySelector('.comment-list');
+        
+                    if (!commentText) return;
+        
+                    fetch('/comment', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ id: photoId, comment: commentText }),
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            const newComment = document.createElement('li');
+                            newComment.classList.add('list-group-item');
+                            newComment.textContent = data.comment;
+                            commentList.appendChild(newComment);
+                            inputField.value = '';  // Czyść pole tekstowe po dodaniu
+                        } else {
+                            alert('Error: ' + data.message);
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert('An error occurred while adding the comment.');
+                    });
+                });
+            });
+        });                
     </script>    
 </body>
 </html>

@@ -118,6 +118,22 @@ def like_photo():
             return {"success": False, "message": "Photo not found"}, 404 
     return {"success": False, "message": "No photo ID provided"}, 400  
 
+@app.route('/comment', methods=['POST'])
+@login_required
+def add_comment():
+    data = request.json
+    photo_id = data.get('id')
+    new_comment = data.get('comment')
+    if not photo_id or not new_comment:
+        return {"success": False, "message": "Invalid data"}, 400
+    photo = Photos.query.filter_by(id=photo_id).first()
+    if not photo:
+        return {"success": False, "message": "Photo not found"}, 404
+    photo.comments += f"\n{new_comment}" if photo.comments else new_comment
+    db.session.commit()
+    return {"success": True, "comment": new_comment}, 200
+
+
 @app.route('/new_post', methods=['GET', 'POST'])
 @login_required
 def new_post():
@@ -170,7 +186,7 @@ def main_page():
 
 
 if __name__ == '__main__':
-    with app.app_context():
-        db.create_all()
-        add()
+    # with app.app_context():
+    #     db.create_all()
+    #     add()
     app.run()
