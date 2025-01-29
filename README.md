@@ -1,8 +1,8 @@
 ## projekt na zaliczenie
 **Osoby wykonujące projekt:**
-**Jan Szala**
-**Konrad Szubski**
-**Adam Wójcik**
+**Jan Szala**,
+**Konrad Szubski**,
+**Adam Wójcik**,
 **Alicja Spleśniak** </br>
 Projekt pozwala na dodawanie zdjęć i opisów na utworzonej stronie internetowej. 
 Na stronę należy się uprzednio zarejestrować. Strona główna wyświetla 5 najnowszych postów. 
